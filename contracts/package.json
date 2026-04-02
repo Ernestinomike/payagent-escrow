@@ -1,0 +1,25 @@
+{
+  "name": "payagent-contracts",
+  "version": "1.0.0",
+  "description": "PayAgentEscrow smart contracts for Celo cUSD gig worker payments",
+  "private": true,
+  "scripts": {
+    "compile": "HARDHAT_DISABLE_TELEMETRY_PROMPT=true hardhat compile",
+    "test": "HARDHAT_DISABLE_TELEMETRY_PROMPT=true hardhat test",
+    "deploy:alfajores": "HARDHAT_DISABLE_TELEMETRY_PROMPT=true hardhat run scripts/deploy.ts --network alfajores",
+    "deploy:celo": "HARDHAT_DISABLE_TELEMETRY_PROMPT=true hardhat run scripts/deploy.ts --network celo",
+    "deploy:local": "HARDHAT_DISABLE_TELEMETRY_PROMPT=true hardhat run scripts/deploy.ts --network hardhat",
+    "node": "HARDHAT_DISABLE_TELEMETRY_PROMPT=true hardhat node",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.19",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^16.4.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.2.0"
+  }
+}
