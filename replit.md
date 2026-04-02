@@ -48,6 +48,39 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## PayAgent Escrow System
+
+Smart contract–backed gig worker payment system on Celo blockchain.
+
+### Contract
+- `attached_assets/PayAgentEscrow-2.sol_*.txt` — Solidity source (ERC-20 cUSD escrow)
+- Deployed via `/api/admin/deploy` POST endpoint or the standalone script
+
+### Deployment
+- **Via API** (requires external RPC access): `POST /api/admin/deploy { "network": "alfajores" }`
+- **Via script** (recommended): `pnpm --filter @workspace/scripts run deploy-celo`
+  - Requires `DEPLOYER_PRIVATE_KEY`, `AI_AGENT_PRIVATE_KEY` in env
+  - Fund deployer wallet at https://faucet.celo.org for alfajores testnet
+- **Pre-deployed contract**: Set `CONTRACT_ADDRESS` secret + `CELO_NETWORK` env var to wire in an existing deployment
+
+### API Endpoints
+- `POST /api/escrow/deposit` — Employer deposits cUSD into escrow
+- `GET  /api/escrow/:jobId` — Get escrow details
+- `GET  /api/escrow/worker/:address` — Get worker's jobs
+- `GET  /api/escrow/employer/:address` — Get employer's jobs
+- `POST /api/payments/release` — AI agent releases payment (autonomous)
+- `POST /api/payments/dispute` — Initiate dispute
+- `GET  /api/receipts/:jobId` — On-chain receipt for a job
+- `GET  /api/receipts/worker/:address` — All receipts for a worker
+- `GET  /api/admin/deploy` — Deploy contract to Celo
+- `GET  /api/admin/status` — Contract status + config
+- `GET  /api/admin/transactions` — Transaction log with pagination
+
+### Network Config
+- `CELO_NETWORK` — "alfajores" (testnet, default) or "celo" (mainnet)
+- `CONTRACT_ADDRESS` — override to use a pre-deployed contract address
+- cUSD addresses auto-selected from known Celo addresses per network
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)

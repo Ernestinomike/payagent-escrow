@@ -5,7 +5,10 @@
  * PayAgent Escrow API — Celo cUSD smart contract operations
  * OpenAPI spec version: 0.1.0
  */
+import type { PaymentReceipt } from "./paymentReceipt";
 
-export interface HealthStatus {
-  status: string;
+export interface ReceiptList {
+  worker: string;
+  receipts: PaymentReceipt[];
+  count: number;
 }

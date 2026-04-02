@@ -3,13 +3,21 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: PayAgent Escrow API — Celo cUSD smart contract operations
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: escrow
+    description: Escrow deposit and management
+  - name: payments
+    description: AI agent payment release
+  - name: receipts
+    description: On-chain receipt generation
+  - name: admin
+    description: Admin and deployment operations
 paths:
   /healthz:
     get:
@@ -24,6 +32,262 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /escrow/deposit:
+    post:
+      operationId: depositEscrow
+      tags: [escrow]
+      summary: Deposit cUSD into escrow
+      description: Employer approves and deposits cUSD into the escrow contract for a job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepositEscrowRequest"
+      responses:
+        "200":
+          description: Escrow deposit transaction sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /escrow/{jobId}:
+    get:
+      operationId: getEscrowDetails
+      tags: [escrow]
+      summary: Get escrow details for a job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Hex job ID (bytes32)
+      responses:
+        "200":
+          description: Escrow details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowDetails"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /escrow/worker/{address}:
+    get:
+      operationId: getWorkerJobs
+      tags: [escrow]
+      summary: Get all job IDs for a worker
+      parameters:
+        - name: address
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Worker wallet address
+      responses:
+        "200":
+          description: List of job IDs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobIdList"
+
+  /escrow/employer/{address}:
+    get:
+      operationId: getEmployerJobs
+      tags: [escrow]
+      summary: Get all job IDs for an employer
+      parameters:
+        - name: address
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Employer wallet address
+      responses:
+        "200":
+          description: List of job IDs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobIdList"
+
+  /payments/release:
+    post:
+      operationId: releasePayment
+      tags: [payments]
+      summary: AI agent releases payment to worker
+      description: Called by the AI agent after verifying job completion — triggers on-chain cUSD transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReleasePaymentRequest"
+      responses:
+        "200":
+          description: Payment released on-chain
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /payments/dispute:
+    post:
+      operationId: initiateDispute
+      tags: [payments]
+      summary: Initiate a dispute for a job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisputeRequest"
+      responses:
+        "200":
+          description: Dispute initiated on-chain
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /receipts/{jobId}:
+    get:
+      operationId: getReceipt
+      tags: [receipts]
+      summary: Get on-chain payment receipt for a job
+      description: Returns full transaction receipt with blockchain proof for gig worker invoicing
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Hex job ID (bytes32)
+      responses:
+        "200":
+          description: Payment receipt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentReceipt"
+        "404":
+          description: Receipt not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /receipts/worker/{address}:
+    get:
+      operationId: getWorkerReceipts
+      tags: [receipts]
+      summary: Get all receipts for a worker address
+      parameters:
+        - name: address
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Worker wallet address
+      responses:
+        "200":
+          description: List of payment receipts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptList"
+
+  /admin/deploy:
+    post:
+      operationId: deployContract
+      tags: [admin]
+      summary: Deploy the PayAgentEscrow contract to Celo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeployRequest"
+      responses:
+        "200":
+          description: Contract deployed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeployResult"
+        "400":
+          description: Deployment failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/status:
+    get:
+      operationId: getContractStatus
+      tags: [admin]
+      summary: Get deployed contract status and configuration
+      responses:
+        "200":
+          description: Contract status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractStatus"
+
+  /admin/transactions:
+    get:
+      operationId: getTransactionLog
+      tags: [admin]
+      summary: Get transaction log
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        "200":
+          description: Transaction log
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionLog"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +298,307 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: string
+      required:
+        - error
+
+    DepositEscrowRequest:
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: Unique job identifier (hex string, will be hashed to bytes32)
+        workerAddress:
+          type: string
+          description: Wallet address of the gig worker
+        amount:
+          type: string
+          description: Amount of cUSD to escrow (in human-readable units e.g. "10.5")
+        jobTitle:
+          type: string
+          description: Human-readable job title for receipt generation
+      required:
+        - jobId
+        - workerAddress
+        - amount
+        - jobTitle
+
+    ReleasePaymentRequest:
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: The job ID to release payment for (hex bytes32)
+        completionProof:
+          type: string
+          description: Optional proof of completion (URL, hash, or description)
+      required:
+        - jobId
+
+    DisputeRequest:
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: The job ID to dispute
+        initiatorAddress:
+          type: string
+          description: Address of the party initiating the dispute (worker or employer)
+        reason:
+          type: string
+          description: Reason for the dispute
+      required:
+        - jobId
+        - initiatorAddress
+
+    DeployRequest:
+      type: object
+      properties:
+        network:
+          type: string
+          enum: [celo, alfajores]
+          description: Target network (celo = mainnet, alfajores = testnet)
+        cUSDAddress:
+          type: string
+          description: Override cUSD token address (optional, uses well-known defaults)
+      required:
+        - network
+
+    TransactionResult:
+      type: object
+      properties:
+        txHash:
+          type: string
+        blockNumber:
+          type: integer
+        status:
+          type: string
+          enum: [success, pending, failed]
+        jobId:
+          type: string
+        gasUsed:
+          type: string
+        timestamp:
+          type: integer
+      required:
+        - txHash
+        - status
+
+    EscrowDetails:
+      type: object
+      properties:
+        jobId:
+          type: string
+        employer:
+          type: string
+        worker:
+          type: string
+        amount:
+          type: string
+          description: Net amount in cUSD (human-readable)
+        fee:
+          type: string
+          description: Platform fee in cUSD (human-readable)
+        status:
+          type: string
+          enum: [None, Escrowed, Released, Disputed, Resolved, Refunded]
+        createdAt:
+          type: integer
+          description: Unix timestamp
+        jobTitle:
+          type: string
+      required:
+        - jobId
+        - employer
+        - worker
+        - amount
+        - fee
+        - status
+        - createdAt
+        - jobTitle
+
+    JobIdList:
+      type: object
+      properties:
+        address:
+          type: string
+        jobIds:
+          type: array
+          items:
+            type: string
+        count:
+          type: integer
+      required:
+        - address
+        - jobIds
+        - count
+
+    PaymentReceipt:
+      type: object
+      properties:
+        jobId:
+          type: string
+        jobTitle:
+          type: string
+        worker:
+          type: string
+        employer:
+          type: string
+        amount:
+          type: string
+          description: Amount paid in cUSD
+        txHash:
+          type: string
+          description: Release transaction hash
+        blockNumber:
+          type: integer
+        network:
+          type: string
+        contractAddress:
+          type: string
+        timestamp:
+          type: integer
+        celoscanUrl:
+          type: string
+          description: Link to Celoscan explorer for the transaction
+        status:
+          type: string
+          enum: [Released, Resolved]
+      required:
+        - jobId
+        - jobTitle
+        - worker
+        - employer
+        - amount
+        - txHash
+        - blockNumber
+        - network
+        - contractAddress
+        - timestamp
+        - celoscanUrl
+        - status
+
+    ReceiptList:
+      type: object
+      properties:
+        worker:
+          type: string
+        receipts:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentReceipt"
+        count:
+          type: integer
+      required:
+        - worker
+        - receipts
+        - count
+
+    DeployResult:
+      type: object
+      properties:
+        contractAddress:
+          type: string
+        txHash:
+          type: string
+        network:
+          type: string
+        deployerAddress:
+          type: string
+        aiAgentAddress:
+          type: string
+        cUSDAddress:
+          type: string
+        blockNumber:
+          type: integer
+        celoscanUrl:
+          type: string
+      required:
+        - contractAddress
+        - txHash
+        - network
+        - deployerAddress
+        - aiAgentAddress
+        - cUSDAddress
+        - blockNumber
+        - celoscanUrl
+
+    ContractStatus:
+      type: object
+      properties:
+        deployed:
+          type: boolean
+        contractAddress:
+          type: string
+        network:
+          type: string
+        aiAgent:
+          type: string
+        feeBps:
+          type: integer
+        collectedFees:
+          type: string
+        deployerAddress:
+          type: string
+        celoscanUrl:
+          type: string
+      required:
+        - deployed
+
+    TransactionLog:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionEntry"
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+      required:
+        - transactions
+        - total
+        - limit
+        - offset
+
+    TransactionEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [deposit, release, dispute, resolve, refund, deploy]
+        jobId:
+          type: string
+        txHash:
+          type: string
+        from:
+          type: string
+        to:
+          type: string
+        amount:
+          type: string
+        status:
+          type: string
+        blockNumber:
+          type: integer
+        network:
+          type: string
+        createdAt:
+          type: integer
+      required:
+        - id
+        - type
+        - txHash
+        - status
+        - createdAt
