@@ -6,6 +6,22 @@ dotenv.config();
 
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY ?? "";
 const CELOSCAN_API_KEY = process.env.CELOSCAN_API_KEY ?? "";
+const ALCHEMY_KEY = process.env.ALCHEMY_KEY ?? "";
+
+function getCeloRpc(network: "celo" | "alfajores"): string {
+  if (ALCHEMY_KEY) {
+    const urls = {
+      celo: `https://celo-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+      alfajores: `https://celo-alfajores.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    };
+    return urls[network];
+  }
+  const fallback = {
+    celo: "https://forno.celo.org",
+    alfajores: "https://alfajores-forno.celo-testnet.org",
+  };
+  return fallback[network];
+}
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -24,13 +40,13 @@ const config: HardhatUserConfig = {
       chainId: 31337,
     },
     alfajores: {
-      url: "https://alfajores-forno.celo-testnet.org",
+      url: getCeloRpc("alfajores"),
       accounts: DEPLOYER_PRIVATE_KEY ? [DEPLOYER_PRIVATE_KEY] : [],
       chainId: 44787,
       gasPrice: 1000000000,
     },
     celo: {
-      url: "https://forno.celo.org",
+      url: getCeloRpc("celo"),
       accounts: DEPLOYER_PRIVATE_KEY ? [DEPLOYER_PRIVATE_KEY] : [],
       chainId: 42220,
       gasPrice: 500000000,

@@ -53,6 +53,24 @@ export const CUSD_ADDRESSES: Record<string, string> = {
   alfajores: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
 };
 
+export function getCeloRpc(network: string): string {
+  const alchemyKey = process.env.ALCHEMY_KEY;
+  if (alchemyKey) {
+    const alchemyUrls: Record<string, string> = {
+      celo: `https://celo-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+      alfajores: `https://celo-alfajores.g.alchemy.com/v2/${alchemyKey}`,
+    };
+    if (alchemyUrls[network]) return alchemyUrls[network];
+  }
+  const fallback: Record<string, string> = {
+    celo: "https://forno.celo.org",
+    alfajores: "https://alfajores-forno.celo-testnet.org",
+  };
+  const url = fallback[network];
+  if (!url) throw new Error(`Unknown network: ${network}`);
+  return url;
+}
+
 export const CELO_RPC: Record<string, string> = {
   celo: "https://forno.celo.org",
   alfajores: "https://alfajores-forno.celo-testnet.org",

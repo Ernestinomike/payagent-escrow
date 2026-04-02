@@ -4,8 +4,8 @@ import {
   ERC20_ABI,
   STATUS_MAP,
   CUSD_ADDRESSES,
-  CELO_RPC,
   CELOSCAN_BASE,
+  getCeloRpc,
 } from "./contractAbi.js";
 import { db } from "@workspace/db";
 import {
@@ -17,8 +17,7 @@ import { eq, desc, sql } from "drizzle-orm";
 import { logger } from "./logger.js";
 
 function getProvider(network: string) {
-  const rpc = CELO_RPC[network];
-  if (!rpc) throw new Error(`Unknown network: ${network}`);
+  const rpc = getCeloRpc(network);
   return new ethers.JsonRpcProvider(rpc);
 }
 

@@ -35,7 +35,9 @@ async function main() {
 
   if (balance === 0n && chainIdNum !== 31337) {
     throw new Error(
-      `Deployer wallet has 0 CELO. Fund it at https://faucet.celo.org then retry.`
+      `Deployer wallet has 0 CELO.\n` +
+      `Fund it at https://faucet.celo.org (Alfajores) then retry.\n` +
+      `Wallet: ${deployer.address}`
     );
   }
 
@@ -76,7 +78,7 @@ async function main() {
     console.log(`Celoscan:  ${CELOSCAN[chainIdNum]}/address/${contractAddress}`);
   }
 
-  // Verify deployment
+  // Verify state
   const owner = await escrow.owner();
   const agent = await escrow.aiAgent();
   const feeBps = await escrow.feeBps();
@@ -107,9 +109,11 @@ async function main() {
   fs.writeFileSync(outFile, JSON.stringify(deploymentInfo, null, 2));
   console.log(`\nDeployment saved → deployments/${networkName}.json`);
 
-  console.log(`\n─── Add to Replit Secrets ───`);
-  console.log(`CONTRACT_ADDRESS=${contractAddress}`);
-  console.log(`CELO_NETWORK=${networkName}`);
+  console.log(`\n${"═".repeat(50)}`);
+  console.log(`NEXT STEP — Add this to Replit Secrets:`);
+  console.log(`  CONTRACT_ADDRESS = ${contractAddress}`);
+  console.log(`  CELO_NETWORK     = ${networkName}`);
+  console.log(`${"═".repeat(50)}\n`);
 }
 
 main().catch((err) => {
