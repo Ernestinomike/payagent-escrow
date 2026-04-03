@@ -77,12 +77,12 @@ Smart contract–backed gig worker payment system on Celo blockchain.
 - `GET  /api/admin/transactions` — Transaction log with pagination
 
 ### Live Deployment (Celo Sepolia Testnet)
-- **Contract Address:** `0xa25DA96C2022216D83041A4013BE50d29d60661d`
-- **Tx Hash:** `0xf17631b51446eb3827c355941626f2721fda754d63bd553651cdab6855ee3d9c`
-- **Celoscan:** https://alfajores.celoscan.io/address/0xa25DA96C2022216D83041A4013BE50d29d60661d
+- **Contract Address:** `0xeCF63926531da7163E26C0adbB4B5E37BB2b957D`
+- **Tx Hash:** `0x0ac88f967ad3264f501edf7d4aa2e0833f3b7c2ca8a8188a786ea237178ee7d0`
+- **Celoscan:** https://alfajores.celoscan.io/address/0xeCF63926531da7163E26C0adbB4B5E37BB2b957D
 - **Deployer:** `0x9d28FB300f06EE34d7A9A9531b363c0153fB979d`
 - **AI Agent:** `0xD6E3cFC7095491B4B31253B31b517d9d9aC7CC85`
-- **Deployed at block:** 21932855
+- **Deployed at block:** 21933441
 
 ### Network Config
 - `CELO_NETWORK` — "celoSepolia" (testnet, active) | "alfajores" | "celo" (mainnet)
