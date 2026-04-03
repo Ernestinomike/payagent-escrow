@@ -86,7 +86,7 @@ Smart contract–backed gig worker payment system on Celo blockchain.
 
 ### Network Config
 - `CELO_NETWORK` — "celoSepolia" (testnet, active) | "alfajores" | "celo" (mainnet)
-- `CONTRACT_ADDRESS` — set to `0xa25DA96C2022216D83041A4013BE50d29d60661d` (live)
+- `CONTRACT_ADDRESS` — set to `0xeCF63926531da7163E26C0adbB4B5E37BB2b957D` (live)
 - RPC: Alchemy (`celo-sepolia.g.alchemy.com`) with Forno fallback
 - cUSD addresses auto-selected from known Celo addresses per network
 
