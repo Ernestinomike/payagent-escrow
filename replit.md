@@ -76,10 +76,24 @@ Smart contract–backed gig worker payment system on Celo blockchain.
 - `GET  /api/admin/status` — Contract status + config
 - `GET  /api/admin/transactions` — Transaction log with pagination
 
+### Live Deployment (Celo Sepolia Testnet)
+- **Contract Address:** `0xa25DA96C2022216D83041A4013BE50d29d60661d`
+- **Tx Hash:** `0xf17631b51446eb3827c355941626f2721fda754d63bd553651cdab6855ee3d9c`
+- **Celoscan:** https://alfajores.celoscan.io/address/0xa25DA96C2022216D83041A4013BE50d29d60661d
+- **Deployer:** `0x9d28FB300f06EE34d7A9A9531b363c0153fB979d`
+- **AI Agent:** `0xD6E3cFC7095491B4B31253B31b517d9d9aC7CC85`
+- **Deployed at block:** 21932855
+
 ### Network Config
-- `CELO_NETWORK` — "alfajores" (testnet, default) or "celo" (mainnet)
-- `CONTRACT_ADDRESS` — override to use a pre-deployed contract address
+- `CELO_NETWORK` — "celoSepolia" (testnet, active) | "alfajores" | "celo" (mainnet)
+- `CONTRACT_ADDRESS` — set to `0xa25DA96C2022216D83041A4013BE50d29d60661d` (live)
+- RPC: Alchemy (`celo-sepolia.g.alchemy.com`) with Forno fallback
 - cUSD addresses auto-selected from known Celo addresses per network
+
+### GitHub
+- GitHub connector not yet connected (dismissed during OAuth). Options:
+  1. Reconnect via Replit GitHub integration
+  2. Provide a GitHub Personal Access Token (repo scope) as a secret to push via API
 
 ## Packages
 

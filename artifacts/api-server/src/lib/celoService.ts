@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import {
   PAYAGENT_ESCROW_ABI,
+  PAYAGENT_ESCROW_BYTECODE,
   ERC20_ABI,
   STATUS_MAP,
   CUSD_ADDRESSES,
@@ -411,5 +412,5 @@ async function logTransaction(entry: {
 }
 
 function buildBytecode(): string {
-  return "0x";
+  return PAYAGENT_ESCROW_BYTECODE;
 }
