@@ -28,4 +28,9 @@ timeoutMs = 20000
 [userenv]
 
 [userenv.shared]
+
+[userenv.development]
+CELO_NETWORK = "alfajores"
+
+[userenv.production]
 CELO_NETWORK = "alfajores"

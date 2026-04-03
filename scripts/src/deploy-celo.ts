@@ -25,7 +25,7 @@ const CUSD_ADDRESSES: Record<string, string> = {
 
 const CELO_RPC: Record<string, string> = {
   celo: "https://forno.celo.org",
-  alfajores: "https://alfajores-forno.celo-testnet.org",
+  alfajores: "https://celo-alfajores.g.alchemy.com/v2/XbS3A-psx-MSEn_ownjsb0You7sONhdF",
 };
 
 const CELOSCAN_BASE: Record<string, string> = {
