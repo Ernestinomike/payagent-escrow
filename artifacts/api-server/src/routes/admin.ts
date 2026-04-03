@@ -9,7 +9,7 @@ import {
 const router: IRouter = Router();
 
 const deploySchema = z.object({
-  network: z.enum(["celo", "alfajores"]),
+  network: z.enum(["celo", "alfajores", "celoSepolia"]),
   cUSDAddress: z.string().optional(),
 });
 

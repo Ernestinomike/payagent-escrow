@@ -8,17 +8,19 @@ const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY ?? "";
 const CELOSCAN_API_KEY = process.env.CELOSCAN_API_KEY ?? "";
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY ?? "";
 
-function getCeloRpc(network: "celo" | "alfajores"): string {
+function getCeloRpc(network: "celo" | "alfajores" | "celoSepolia"): string {
   if (ALCHEMY_KEY) {
     const urls = {
       celo: `https://celo-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       alfajores: `https://celo-alfajores.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+      celoSepolia: `https://celo-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     };
     return urls[network];
   }
   const fallback = {
     celo: "https://forno.celo.org",
     alfajores: "https://alfajores-forno.celo-testnet.org",
+    celoSepolia: "https://alfajores-forno.celo-testnet.org",
   };
   return fallback[network];
 }
@@ -45,6 +47,12 @@ const config: HardhatUserConfig = {
       chainId: 44787,
       gasPrice: 1000000000,
     },
+    celoSepolia: {
+      url: getCeloRpc("celoSepolia"),
+      accounts: DEPLOYER_PRIVATE_KEY ? [DEPLOYER_PRIVATE_KEY] : [],
+      chainId: 44787,
+      gasPrice: 1000000000,
+    },
     celo: {
       url: getCeloRpc("celo"),
       accounts: DEPLOYER_PRIVATE_KEY ? [DEPLOYER_PRIVATE_KEY] : [],
@@ -56,11 +64,20 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       alfajores: CELOSCAN_API_KEY,
+      celoSepolia: CELOSCAN_API_KEY,
       celo: CELOSCAN_API_KEY,
     },
     customChains: [
       {
         network: "alfajores",
+        chainId: 44787,
+        urls: {
+          apiURL: "https://api-alfajores.celoscan.io/api",
+          browserURL: "https://alfajores.celoscan.io",
+        },
+      },
+      {
+        network: "celoSepolia",
         chainId: 44787,
         urls: {
           apiURL: "https://api-alfajores.celoscan.io/api",

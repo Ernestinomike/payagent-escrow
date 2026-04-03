@@ -51,6 +51,13 @@ export const STATUS_MAP: Record<number, string> = {
 export const CUSD_ADDRESSES: Record<string, string> = {
   celo: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
   alfajores: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
+  celoSepolia: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
+};
+
+export const CHAIN_IDS: Record<string, number> = {
+  celo: 42220,
+  alfajores: 44787,
+  celoSepolia: 44787,
 };
 
 export function getCeloRpc(network: string): string {
@@ -59,12 +66,14 @@ export function getCeloRpc(network: string): string {
     const alchemyUrls: Record<string, string> = {
       celo: `https://celo-mainnet.g.alchemy.com/v2/${alchemyKey}`,
       alfajores: `https://celo-alfajores.g.alchemy.com/v2/${alchemyKey}`,
+      celoSepolia: `https://celo-sepolia.g.alchemy.com/v2/${alchemyKey}`,
     };
     if (alchemyUrls[network]) return alchemyUrls[network];
   }
   const fallback: Record<string, string> = {
     celo: "https://forno.celo.org",
     alfajores: "https://alfajores-forno.celo-testnet.org",
+    celoSepolia: "https://alfajores-forno.celo-testnet.org",
   };
   const url = fallback[network];
   if (!url) throw new Error(`Unknown network: ${network}`);
@@ -74,9 +83,11 @@ export function getCeloRpc(network: string): string {
 export const CELO_RPC: Record<string, string> = {
   celo: "https://forno.celo.org",
   alfajores: "https://alfajores-forno.celo-testnet.org",
+  celoSepolia: "https://alfajores-forno.celo-testnet.org",
 };
 
 export const CELOSCAN_BASE: Record<string, string> = {
   celo: "https://celoscan.io",
   alfajores: "https://alfajores.celoscan.io",
+  celoSepolia: "https://alfajores.celoscan.io",
 };
